@@ -102,6 +102,32 @@ class _ReadJsonFileState extends State<ReadJsonFile> {
     });
   }
 
+
+  void updateJsonValue() {
+    // Path to the JSON file
+    String filePath = 'C:/Users/Admin/Downloads/update_file.json';
+
+    try {
+      // Read the JSON file
+      File jsonFile = File(filePath);
+      Map<String, dynamic> jsonData = json.decode(jsonFile.readAsStringSync());
+
+      // Update the value
+      jsonData['name'] = 'Jane ';
+
+      // Convert the updated JSON data to a string
+      String jsonString = json.encode(jsonData);
+
+      // Write the updated JSON string back to the file
+      jsonFile.writeAsStringSync(jsonString);
+
+      print('JSON value updated successfully!');
+    } catch (e) {
+      print('Error updating JSON value: $e');
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,16 +141,25 @@ class _ReadJsonFileState extends State<ReadJsonFile> {
           readJsonFileFromExtStorage();
         },
       ),
-      body: ListView.builder(
-          itemCount: _items.length,
-          itemBuilder: (context, index) {
-            return Card(
-              margin: const EdgeInsets.all(3),
-              child: ListTile(
-                leading: Text(_items[index]['name'].toString()),
-              ),
-            );
-          }),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+                itemCount: _items.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    margin: const EdgeInsets.all(3),
+                    child: ListTile(
+                      leading: Text(_items[index]['name'].toString()),
+                    ),
+                  );
+                }),
+          ),
+          ElevatedButton(onPressed: (){
+            updateJsonValue();
+          }, child: Text('Update value'))
+        ],
+      ),
     );
   }
 }
